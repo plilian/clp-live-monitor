@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.idea/
+.DS_Store
+out/
+snapshots.csv
+latest_snapshot.csv
