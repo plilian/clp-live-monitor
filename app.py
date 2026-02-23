@@ -65,7 +65,6 @@ def compute_one(
 def main():
     st.set_page_config(page_title="CLP Live Monitor", layout="wide")
 
-    # refresh every 30s
     st_autorefresh(interval=30_000, key="clp_refresh")
 
     st.title("CLP Live Monitor (Binance Futures)")
@@ -84,7 +83,6 @@ def main():
         st.divider()
         st.header("Watchlist")
 
-        # Defaults (used by both modes)
         wF, wOI, wR = 0.5, 0.3, 0.2
 
         if simple_mode:
@@ -197,14 +195,11 @@ def main():
         good = good.sort_values("clp", ascending=False).reset_index(drop=True)
         good["rank"] = range(1, len(good) + 1)
 
-        # Market snapshot metrics
-        ci = crowding_index(good["clp"])  # now robust, works with 3 symbols too
+        ci = crowding_index(good["clp"])
         colA, colB, colC = st.columns(3)
         colA.metric("Market Avg CLP", f"{good['clp'].mean():.2f}")
         colB.metric("Crowding Index", f"{ci:.2f}" if pd.notna(ci) else "NA", help="mean(|CLP| top10%) / mean(|CLP|)")
         colC.metric("Tracked Symbols", str(len(good)))
-
-        # Alerts
         extreme = good[good["clp"] > good["extreme_thr"]]
         stress = good[(good["clp"] > good["stress_thr"]) & (good["clp"] <= good["extreme_thr"])]
 
@@ -214,8 +209,6 @@ def main():
             st.warning("⚠️ STRESS detected in: " + ", ".join(stress["symbol"].tolist()))
         else:
             st.success("✅ No stress flags right now (based on auto thresholds).")
-
-        # Regime shifts
         changes = []
         for _, r in good.iterrows():
             sym = r["symbol"]
@@ -261,8 +254,6 @@ def main():
             st.plotly_chart(fig_price_and_clp(df_focus, stress_thr, extreme_thr), use_container_width=True)
         with right:
             st.plotly_chart(fig_components(df_focus.tail(300)), use_container_width=True)
-
-        # ✅ NEW: Time-in-state
         st.divider()
         st.subheader("Regime Time-in-State")
 
@@ -276,8 +267,6 @@ def main():
 
         share = regime_time_share(df_focus, lookback=300)
         st.dataframe(share, use_container_width=True)
-
-        # ✅ NEW: Top contributor
         st.divider()
         st.subheader("Top Contributor (Why is CLP high right now?)")
 

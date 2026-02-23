@@ -28,7 +28,6 @@ def compute_thresholds(
 ) -> tuple[float, float]:
     x = series.dropna().astype(float)
     if len(x) < 80:
-        # fallback, avoids "everything Normal" on short history
         return 0.8, 1.8
 
     if mode == "percentile":

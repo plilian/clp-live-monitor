@@ -75,10 +75,7 @@ def fetch_open_interest_hist(symbol: str, period: str, limit: int = 200) -> pd.D
 
 
 def build_merged_frame(symbol: str, interval: str, lookback_limit: int = 500) -> pd.DataFrame:
-    """
-    Align everything to candle open_time.
-    Funding/OI are merged as-of (last-known).
-    """
+
     price = fetch_klines(symbol=symbol, interval=interval, limit=lookback_limit)
     oi = fetch_open_interest_hist(symbol=symbol, period=interval, limit=min(200, lookback_limit))
     fr = fetch_funding_rate(symbol=symbol, limit=200)

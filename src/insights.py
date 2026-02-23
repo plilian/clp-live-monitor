@@ -4,11 +4,7 @@ import pandas as pd
 
 
 def current_regime_streak(df: pd.DataFrame) -> dict:
-    """
-    Returns:
-      - current_regime
-      - streak_bars (how many candles in current regime)
-    """
+
     if df is None or df.empty or "regime" not in df.columns:
         return {"current_regime": "NA", "streak_bars": 0}
 
@@ -26,9 +22,7 @@ def current_regime_streak(df: pd.DataFrame) -> dict:
 
 
 def regime_time_share(df: pd.DataFrame, lookback: int = 300) -> pd.DataFrame:
-    """
-    % share of each regime in last N rows.
-    """
+
     if df is None or df.empty or "regime" not in df.columns:
         return pd.DataFrame(columns=["regime", "count", "pct"])
 
